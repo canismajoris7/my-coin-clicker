@@ -2,7 +2,8 @@ import random
 from tkinter import *
 import tkinter.messagebox
 import time
-from pickle import *
+
+import threading
 
 
 
@@ -27,6 +28,7 @@ global lonk
 global ranc
 global pond
 global site
+global x
 global exot
 global inst
 global mrkt
@@ -56,7 +58,7 @@ MSSC = 1
 MSSC2 = 1
 decr = 0
 UAU = .75
-
+x = 0
 
 def bonusplus():
     global coin
@@ -101,9 +103,24 @@ def bonusplus():
 def clickfun():
     global coin
     coin = coin + 1
-    _coincount.config(text=coin)
-    time.sleep(UAU)
-    bonusplus()
+
+    global x
+    if x == 0:
+        def f(f_stop):
+            global decr
+            bonusplus()
+            _coincount.config(text=coin)
+            if decr >= 999:
+                tkinter.messagebox.showinfo('ingame message', "you won the game")
+                decr = 0
+            if not f_stop.is_set():
+                threading.Timer(1, f, [f_stop]).start()
+
+        f_stop = threading.Event()
+        # start calling f now and every 60 sec thereafter
+        f(f_stop)
+        x = 1
+
 
 
 def trade():
@@ -276,8 +293,8 @@ def investore():
 
 def dwam():
     tkinter.messagebox.showinfo('ingame message', " this is an idle clicker game")
-    tkinter.messagebox.showinfo('game info', " links = 4{) mines = 30{) farms = 55{) pools = 71{) & 20$     _  also milestone are reached at 99 and 75 for inc & bas")
-    tkinter.messagebox.showinfo('game info', " bases = 81{) & 30$  incorps = 81{) & 35$  hacenter = 1000{)  econextra = 400000{) & 3000000$ invest = 300000{) & 2000000$")
+    tkinter.messagebox.showinfo('game info', " links cost 4, mines cost 30, farms cost 55, pools cost 71 and 20$     _  also milestone are reached at 99 and 75 for incorp and base")
+    tkinter.messagebox.showinfo('game info', " bases cost 81 and 30$, incorps cost 81 and 35$, hacenter cost 1000, econextra cost 400000 and 3000000$, invest cost 300000 and 2000000$, and decryptors cost multiple things, to access uthereum, you need 4 decryptors, and to win the game you need 999 decryptors")
 
 def mile():
     global coin
@@ -309,25 +326,7 @@ def mile():
             MSSC2 = 0
     else:
         tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
-#    if base > 99:
- #       if inco > 75:
- #           if decryptor > 6:
- #               if reum > 500000:
- #                   if coin > 500000000:
-     #                   if mony > 4000000:
-     #                       tkinter.messagebox.showinfo("endgame milestone", "YOU HAVE BEAT THE GAME")
-     #                   else:
-     #                       tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
-     #               else:
-      #                  tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
-      #          else:
-      #              tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
-      #      else:
-     #           tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
-     #   else:
-    #        tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
-   # else:
-   #     tkinter.messagebox.showinfo("disapointing message", "no pending milestones")
+
 def decryptor():
     time.sleep(.5)
     global link
@@ -399,8 +398,84 @@ def auto():
     else:
         tkinter.messagebox.showinfo('ingame message', " READ this MESSAGE! sorry you dont have enough of POOL now")
 
+def reset():
+    global coin
+    if coin >= (10**300):
+        global mine
+        global link
+        global farm
+        global voc
+        global mony
+        global pool
+        global base
+        global inco
+        global hack
+        global ecex
+        global inve
+        global MSSC
+        global MSSC2
+        global decr
+        global digs
+        global reum
+        global lonk
+        global ranc
+        global pond
+        global site
+        global x
+        global exot
+        global inst
+        global mrkt
+        inst = 0
+        exot = 0
+        digs = 0
+
+        lonk = 0
+        ranc = 0
+        pond = 0
+        site = 0
+        reum = 0
+        mine = 0
+        coin = 0
+        link = 0
+        farm = 0
+        pool = 0
+        base = 0
+        inco = 0
+        hack = 0
+        ecex = 0
+        mony = 0
+        voc = 10
+        inve = 0
+        mrkt = 0
+        MSSC = 1
+        MSSC2 = 1
+        decr += 10
+        UAU = .75
+        x = 0
+        _decrcount.config(text=decr)
 
 
+        _linkcount.config(text=link)
+
+        _minecount.config(text=mine)
+
+        _farmcount.config(text=farm)
+
+        _poolcount.config(text=pool)
+
+        _basecount.config(text=base)
+
+        _incocount.config(text=inco)
+
+        _hackcount.config(text=hack)
+
+        _ecexcount.config(text=ecex)
+
+        _invecount.config(text=inve)
+
+        _monycount.config(text=mony)
+    else:
+        tkinter.messagebox.showinfo('ingame message', "sorry you dont have enough inf money")
 
 def uthereum():
     if decr > 3:
@@ -550,6 +625,8 @@ def uthereum():
         clicko = Button(utheroot, text='click', command=clickz)
         clicko.grid(row=0, column=5)
 
+
+
         r_my = Label(utheroot, text='my')
         r_my.grid(row=2, column=0, sticky=W)
 
@@ -669,6 +746,8 @@ _monycount = Label(root, text=mony, fg="green")
 _monycount.grid(row=8, column=0)
 m_title = Label(root, text='CRYPTCOIN')
 m_title.grid(row=0, column=2)
+resto = Button(root, text='reset if at infinity', command=reset)
+resto.grid(row=11, column=5)
 m_link = Label(root, text='link')
 m_link.grid(row=2, column=3)
 _linkcount = Label(root, text=link)
@@ -738,6 +817,7 @@ launch.grid(row=9, column=18)
 tran = Button(root, text='reum to money', fg="blue", command=addto)
 tran.grid(row=9, column=21)
 root.mainloop()
+
 
 
 
